@@ -1,35 +1,28 @@
 name: release
+
 on:
-  push:
-    branches:
-    - main
-permissions: {}
+  workflow_dispatch:
+
 jobs:
-  release-tag:
-    permissions:
-      # create tag
-      contents: write
+  deploy:
     runs-on: ubuntu-latest
-    outputs:
-      new-tag: ${{ steps.ccv.outputs.new-tag }}
+
     steps:
-    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      with:
-        fetch-depth: 0
-    - name: Bump tag if necessary
-      id: ccv
-      uses: smlx/ccv@7318e2f25a52dcd550e75384b84983973251a1f8 # v0.10.0
-  release-build:
-    permissions:
-      # create release
-      contents: write
-      # push docker images to registry
-      packages: write
-    needs: release-tag
-    if: needs.release-tag.outputs.new-tag == 'true'
-    runs-on: ubuntu-latest
-    steps:
-    # ... build and release steps here
-    - name: Echo
-      run: |
-        echo "Hello World"
+      - name: Checkout Code
+        uses: actions/checkout@v5
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: main
+      
+      - name: Display Outputs
+        run: |
+          echo ${{ steps.semver.outputs.current }}
+          echo ${{ steps.semver.outputs.next }}
+          echo ${{ steps.semver.outputs.nextStrict }}
+          echo ${{ steps.semver.outputs.nextMajor }}
+          echo ${{ steps.semver.outputs.nextMajorStrict }}
+          echo ${{ steps.server.outputs.bump }}
