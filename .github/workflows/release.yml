@@ -30,3 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # ... build and release steps here
+    - name: Echo
+      run: |
+        echo "Hello World"
