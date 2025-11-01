@@ -11,13 +11,14 @@ jobs:
     permissions:
       contents: write # Req'd for releases/tags
     steps:
+      - uses: actions/checkout@v4
       - name: Get merge commit message
         id: get_commit_message
         run: |
           MERGE_COMMIT_MESSAGE=$(git log -1 --pretty=%B)
           echo "Merge commit message: $MERGE_COMMIT_MESSAGE"
           echo "merge_message=$MERGE_COMMIT_MESSAGE" >> $GITHUB_OUTPUT
-          
+
       - name: Create release
         uses: dexwritescode/release-on-merge-action@v1
         env:
