@@ -1,27 +1,32 @@
 name: release
-
 on:
   push:
     branches:
-      - main
-
+    - main
+permissions: {}
 jobs:
-  release-on-merge:
-    runs-on: ubuntu-latest
+  release-tag:
     permissions:
-      contents: write # Req'd for releases/tags
+      # create tag
+      contents: write
+    runs-on: ubuntu-latest
+    outputs:
+      new-tag: ${{ steps.ccv.outputs.new-tag }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Get merge commit message
-        id: get_commit_message
-        run: |
-          MERGE_COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          echo "Merge commit message: $MERGE_COMMIT_MESSAGE"
-          echo "merge_message=$MERGE_COMMIT_MESSAGE" >> $GITHUB_OUTPUT
-
-      - name: Create release
-        uses: dexwritescode/release-on-merge-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          generate-release-notes: true
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        fetch-depth: 0
+    - name: Bump tag if necessary
+      id: ccv
+      uses: smlx/ccv@7318e2f25a52dcd550e75384b84983973251a1f8 # v0.10.0
+  release-build:
+    permissions:
+      # create release
+      contents: write
+      # push docker images to registry
+      packages: write
+    needs: release-tag
+    if: needs.release-tag.outputs.new-tag == 'true'
+    runs-on: ubuntu-latest
+    steps:
+    # ... build and release steps here
