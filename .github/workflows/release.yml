@@ -38,4 +38,5 @@ jobs:
           tag: ${{ steps.tagger.outputs.new_tag }}
           name: Release ${{ steps.tagger.outputs.new_tag }}
           body: ${{ steps.tagger.outputs.changelog }}
+          generateReleaseNotes: true
 
