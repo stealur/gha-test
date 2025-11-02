@@ -16,23 +16,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v5
-
-      - name: Get Next Version
-        id: semver
-        uses: ietf-tools/semver-action@v1
-        with:
-          token: ${{ github.token }}
-          branch: main
-      
-      - name: Display Outputs
-        run: |
-          echo ${{ steps.semver.outputs.current }}
-          echo ${{ steps.semver.outputs.next }}
-          echo ${{ steps.semver.outputs.nextStrict }}
-          echo ${{ steps.semver.outputs.nextMajor }}
-          echo ${{ steps.semver.outputs.nextMajorStrict }}
-          echo ${{ steps.server.outputs.bump }}
-      
+    
       - name: Create tag
         id: tagger
         uses: mathieudutour/github-tag-action@v6.2
@@ -47,4 +31,11 @@ jobs:
           echo "${{ steps.tagger.outputs.previous_version }}"
           echo "${{ steps.tagger.outputs.release_type }}"
           echo "${{ steps.tagger.outputs.changelog }}"
+
+      - name: Create a GH release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tagger.outputs.new_tag }}
+          name: Release ${{ steps.tagger.outputs.new_tag }}
+          body: ${{ steps.tagger.outputs.changelog }}
 
