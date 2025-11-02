@@ -41,10 +41,10 @@ jobs:
 
       - name: Display TAGGER Outputs
         run: |
-          echo ${{ steps.tagger.outputs.new_tag }}
-          echo ${{ steps.tagger.outputs.new_version }}
-          echo ${{ steps.tagger.outputs.pervious_tag }}
-          echo ${{ steps.tagger.outputs.previous_version }}
-          echo ${{ steps.tagger.outputs.release_type }}
-          echo ${{ steps.tagger.outputs.changelog }}
+          echo "${{ steps.tagger.outputs.new_tag }}"
+          echo "${{ steps.tagger.outputs.new_version }}"
+          echo "${{ steps.tagger.outputs.pervious_tag }}"
+          echo "${{ steps.tagger.outputs.previous_version }}"
+          echo "${{ steps.tagger.outputs.release_type }}"
+          echo "${{ steps.tagger.outputs.changelog }}"
 
