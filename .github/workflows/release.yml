@@ -29,3 +29,19 @@ jobs:
           echo ${{ steps.semver.outputs.nextMajor }}
           echo ${{ steps.semver.outputs.nextMajorStrict }}
           echo ${{ steps.server.outputs.bump }}
+      
+      - name: Create tag
+        id: tagger
+        uses: matheiudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Display TAGGER Outputs
+        run: |
+          echo ${{ steps.tagger.outputs.new_tag }}
+          echo ${{ steps.tagger.outputs.new_version }}
+          echo ${{ steps.tagger.outputs.pervious_tag }}
+          echo ${{ steps.tagger.outputs.previous_version }}
+          echo ${{ steps.tagger.outputs.release_type }}
+          echo ${{ steps.tagger.outputs.changelog }}
+
